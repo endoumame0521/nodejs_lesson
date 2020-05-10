@@ -5,7 +5,7 @@ let ejs = require('ejs')
 let qs = require('querystring')
 
 let server = http.createServer();
-let template = fs.readFileSync(__dirname + '/public_html/hello.ejs', 'utf-8');
+let template = fs.readFileSync(__dirname + '/public_html/bbs.ejs', 'utf-8');
 let posts = [];
 
 
@@ -24,10 +24,12 @@ server.on('request', function(req, res) {
   if (req.method === 'POST') {
     req.data = '';
     req.on('readable', function() {
-      req.data += read.read();
+      req.data += req.read();
     });
     req.on('end', function() {
-
+      let query = qs.parse(req.data);
+      posts.push(query.name);
+      renderForm(posts, res);
     });
   } else {
     renderForm(posts, res);
